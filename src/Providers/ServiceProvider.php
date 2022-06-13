@@ -2,6 +2,8 @@
 
 namespace Cirelramos\Logs\Providers;
 
+use Cirelramos\Logs\Services\SendLogConsoleService;
+
 /**
  *
  */
@@ -9,6 +11,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     public function register()
     {
+
+        $this->app->bind('send-log-console-service', function()
+        {
+            return new SendLogConsoleService();
+        });
+
         $this->mergeConfig();
     }
 
@@ -17,12 +25,12 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->publishConfig();
         $this->publishMigrations();
     }
-    
+
     private function mergeConfig()
     {
         $this->mergeConfigFrom($this->getConfigPath(), 'logs');
     }
-    
+
     private function publishConfig()
     {
         // Publish a config file
