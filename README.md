@@ -19,13 +19,18 @@ composer require cirelramos/logs
 
 ## Configuration
 
-set provider
+set provider and alias in app.php
 
 ```php
 'providers' => [
     // ...
     Cirelramos\Logs\Providers\ServiceProvider::class,
 ],
+
+
+'aliases' => [
+    'LogConsole' => Cirelramos\Logs\Facades\LogConsoleFacade::class
+]
 ```
 
 

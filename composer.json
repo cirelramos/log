@@ -23,6 +23,14 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Cirelramos\\Logs\\Providers\\ServiceProvider"
+            ],
+            "aliases": {
+                "LogConsole": "Cirelramos\\Logs\\Facades\\LogConsoleFacade"
+            }
         }
     },
     "authors": [
