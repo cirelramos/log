@@ -15,6 +15,6 @@ class LogConsoleFacade extends Facade
 {
     protected static function getFacadeAccessor(): string
     {
-        return 'SendLogConsoleService';
+        return 'send-log-console-service';
     }
 }
