@@ -25,7 +25,7 @@ class QueryRecordLogService
             return;
         }
         if ($query !== null) {
-            $queryActive = request()->header("j0ic3-disable-4ZZm4uG-0a7P1-query-PiEcPBU");
+            $queryActive = request()->header("XH5xcpfecS7HtsEV7BsP90IJ3aA4axV");
             if ($queryActive != null) {
                 $contains = Str::contains($query, "select");
                 if ($contains === false) {
@@ -43,7 +43,7 @@ class QueryRecordLogService
                         $value        = is_numeric($binding) ? $binding : "'$binding'";
                         $sql          = preg_replace('/\?/', $value, $sql, 1);
                     }
-                    $queryActive = request()->header("j0ic3-disable-4ZZm4uG-0a7P1-query-PiEcPBU");
+                    $queryActive = request()->header("XH5xcpfecS7HtsEV7BsP90IJ3aA4axV");
                     $extraValues = [
                         'query_active' => $queryActive,
                     ];
