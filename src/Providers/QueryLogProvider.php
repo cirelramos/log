@@ -2,6 +2,8 @@
 
 namespace Cirelramos\Logs\Providers;
 
+use Cirelramos\Logs\Services\QueryLogService;
+use Cirelramos\Logs\Services\QueryRecordLogService;
 use Cirelramos\Logs\Services\SendLogConsoleService;
 use DateTime;
 use Illuminate\Support\Facades\DB;
@@ -20,38 +22,13 @@ class QueryLogProvider extends ServiceProvider
      */
     public function boot(): void
     {
-            DB::listen(static function ($query) {
-                if(config('logs.query_log_is_active') === false){
-                   return;
-                }
+        DB::listen(static function ($query) {
+            QueryLogService::execute($query);
+        });
 
-                $queryBinding = '';
+        DB::beforeExecuting(static function ($query, $bindings) {
+            QueryRecordLogService::execute($query, $bindings);
+        });
 
-                $sql = $query->sql;
-
-                $bindings = array_map(static function ($value) {
-                    if ($value instanceof DateTime) {
-                        return $value->format('Y-m-d H:i:s');
-                    }
-                    return $value;
-                }, $query->bindings);
-
-                foreach ($bindings as $binding) {
-                    $queryBinding .= $binding . ', ';
-                    $value        = is_numeric($binding) ? $binding : "'$binding'";
-                    $sql          = preg_replace('/\?/', $value, $sql, 1);
-                }
-
-                $searchWords = config('logs.exclude_log_query_by_words');
-                if (Str::contains($sql, $searchWords)) {
-                    return null;
-                }
-
-                $arrayQuery     = [
-                    'time_query' => $query->time,
-                ];
-                $sendConsoleLog = new SendLogConsoleService();
-                $sendConsoleLog->execute('query complete:' . $sql, $arrayQuery);
-            });
     }
 }
