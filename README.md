@@ -19,18 +19,13 @@ composer require cirelramos/logs
 
 ## Configuration
 
-set provider and alias in app.php
+set provider
 
 ```php
 'providers' => [
     // ...
     Cirelramos\Logs\Providers\ServiceProvider::class,
 ],
-
-
-'aliases' => [
-    'LogConsole' => Cirelramos\Logs\Facades\LogConsoleFacade::class
-]
 ```
 
 
@@ -51,6 +46,11 @@ add provider in config/app.php
     'providers' => [
         Cirelramos\Logs\Providers\QueryLogProvider::class,
    ]
+```
+
+```php
+$extraValues['test'] = 1;
+LogConsoleFacade::full()->tracker()->log('your message', $extraValues);
 ```
 
 

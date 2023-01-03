@@ -3,12 +3,9 @@
 namespace Cirelramos\Logs\Providers;
 
 use Cirelramos\Logs\Services\QueryLogService;
-use Cirelramos\Logs\Services\QueryRecordLogService;
-use Cirelramos\Logs\Services\SendLogConsoleService;
-use DateTime;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
+use Cirelramos\Logs\Services\QueryRecordLogService;
 
 /**
  *
@@ -29,6 +26,5 @@ class QueryLogProvider extends ServiceProvider
         DB::beforeExecuting(static function ($query, $bindings) {
             QueryRecordLogService::execute($query, $bindings);
         });
-
     }
 }

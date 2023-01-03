@@ -15,7 +15,12 @@ class SendLogConsoleService
     /**
      * @var
      */
-    public $type_log = "";
+    private $type_log = "";
+
+    /**
+     * @var
+     */
+    private bool $tracker = false;
 
     public function __construct()
     {
@@ -37,6 +42,15 @@ class SendLogConsoleService
     public function full(): self
     {
         $this->type_log = "full";
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function tracker(): self
+    {
+        $this->tracker = true;
         return $this;
     }
 
@@ -68,6 +82,9 @@ class SendLogConsoleService
         if ( !is_array($extraValues)) {
             $extraValues = [];
         }
+        if ($this->tracker === true && array_key_exists('tracker', $extraValues) === false) {
+            $extraValues[ 'tracker' ] = GetTrackerService::execute();
+        }
         $request = request();
         foreach (config('logs.exclude_log_by_endpoint') as $exclude) {
             $verificationExclude = str_contains($request->getRequestUri(), $exclude);
@@ -92,7 +109,7 @@ class SendLogConsoleService
             $values[ 'data_log' ][ 'time' ]         = gmdate("Y-m-d H:i:s");
             $values[ 'data_log' ][ 'message' ]      = $message;
             $values[ 'data_log' ][ 'extra_values' ] = $extraValues;
-            $this->logConsoleDirect($values);
+            $this->logConsoleDirect($values, $message);
             return;
         }
 
@@ -130,21 +147,31 @@ class SendLogConsoleService
             }
         }
 
-        $this->logConsoleDirect($values);
+        $this->logConsoleDirect($values, $message);
     }
 
     /**
      * @param $values
+     * @param $message
      */
-    private function logConsoleDirect($values): void
+    private function logConsoleDirect($values, $message): void
     {
-        $string = "";
         try {
             $string = json_encode($values);
+            $string = str_replace("\\", '', $string);
+            Log::channel('stderr')->info($string);
+            return;
+        }
+        catch(Exception $exception) {
+        }
+
+        try {
+            $string = json_encode($message);
         }
         catch(Exception $exception) {
             $string = "error encode log";
         }
+
         $string = str_replace("\\", '', $string);
         Log::channel('stderr')
             ->info($string);

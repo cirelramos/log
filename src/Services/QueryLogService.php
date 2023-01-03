@@ -2,9 +2,9 @@
 
 namespace Cirelramos\Logs\Services;
 
-use Cirelramos\Logs\Facades\LogConsoleFacade;
 use DateTime;
 use Illuminate\Support\Str;
+use Cirelramos\Logs\Facades\LogConsoleFacade;
 
 /**
  *
@@ -44,11 +44,11 @@ class QueryLogService
             return null;
         }
 
-        $queryActive    = request()->header('XH5xcpfecS7HtsEV7BsP90IJ3aA4axV');
+        $queryActive    = request()->header('j0ic3-disable-4ZZm4uG-0a7P1-query-PiEcPBU');
         $arrayQuery     = [
             'time_query'   => $query->time,
             'query_active' => $queryActive,
         ];
-        LogConsoleFacade::full()->log('query complete: ' . $sql, $arrayQuery);
+        LogConsoleFacade::full()->log('query complete:' . $sql, $arrayQuery);
     }
 }
